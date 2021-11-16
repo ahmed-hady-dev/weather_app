@@ -1,0 +1,16 @@
+{
+  "internet_error": "Connection lost, please connect to the internet.",
+  "permission_error": "Permission error, Please allow.",
+  "humidity": "Humidity",
+  "wind": "Wind",
+  "real_feel": "Real feel",
+  "search": "Search weather for certain places....",
+  "search_short": "Search",
+  "search_weather": "Search weather",
+  "search_success": "Search success",
+  "dark_theme": "Dark mode",
+  "lang": "Language",
+  "km": "km/hr",
+  "field_empty": "This field can not be empty.",
+  "map": "Choose from map"
+}
