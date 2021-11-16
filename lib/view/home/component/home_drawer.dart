@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/core/theme/theme_cubit.dart';
-import 'package:weather_app/view/home/component/map_row.dart';
-import 'package:weather_app/view/home/component/theme_row.dart';
+import '../../../core/theme/theme_cubit.dart';
+import 'map_row.dart';
+import 'theme_row.dart';
 
 import 'language_row.dart';
 

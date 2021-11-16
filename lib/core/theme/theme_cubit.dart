@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weather_app/core/cacheHelper/cache_helper.dart';
+import '../cacheHelper/cache_helper.dart';
 
 part 'theme_state.dart';
 
