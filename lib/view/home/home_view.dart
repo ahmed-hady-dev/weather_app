@@ -27,100 +27,89 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: BlocProvider(
-      create: (context) => HomeCubit()..getWeatherByLocation(),
-      child: BlocConsumer<HomeCubit, HomeState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          final cubit = HomeCubit.get(context);
-          final model = cubit.model;
-          return Scaffold(
-            key: cubit.scaffoldKey,
-            drawer: const HomeDrawer(),
-            body: cubit.model == null ||
-                    state is GetDataLoading ||
-                    state is LocationLoading
-                ? const LoadingWidget()
-                : RefreshIndicator(
-                    onRefresh: () async => await cubit.getWeatherByLocation(),
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(
-                          parent: AlwaysScrollableScrollPhysics()),
-                      children: [
-                        Stack(
-                          children: [
-                            IconButton(
-                                onPressed: () => cubit.scaffoldKey.currentState!
-                                    .openDrawer(),
-                                icon: const Icon(
-                                  Icons.menu,
-                                  size: 32.0,
-                                )),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    CityWidget(
-                                        cityName: model!.name.toString()),
-                                    CountryWidget(
-                                        countryName:
-                                            model.sys!.country.toString()),
-                                    const DateWidget(),
-                                  ],
-                                ),
-                                WeatherIcon(
-                                    weatherIcon:
-                                        model.weather![0]!.icon.toString()),
-                                Column(
-                                  children: <Widget>[
-                                    TempWidget(
-                                        temp: model.main!.temp!
-                                            .toInt()
-                                            .toString()),
-                                    WeatherStateWidget(
-                                        weatherState: model
-                                            .weather![0]!.description
-                                            .toString()),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      InfoWidget(
-                                          title: 'humidity'.tr(),
-                                          subTitle:
-                                              "${model.main!.humidity.toString()}%"),
-                                      InfoWidget(
-                                          title: 'wind'.tr(),
-                                          subTitle: model.wind!.speed!
-                                                  .floor()
-                                                  .toString() +
-                                              ' ' +
-                                              'km'.tr()),
-                                      InfoWidget(
-                                          title: 'real_feel'.tr(),
-                                          subTitle:
-                                              "${model.main!.feelsLike!.floor().toString()}°C"),
-                                    ],
-                                  ),
-                                ),
-                                HomeSearch(cubit: cubit),
-                              ],
-                            )
+        child: BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        final cubit = HomeCubit.get(context);
+        if (state is LocationSuccess || state is UpdateLanguage) {
+          cubit.getWeatherByLocation(
+              lat: cubit.position!.latitude, lon: cubit.position!.longitude);
+        }
+        if (state is UpdatedMarker) {
+          cubit.getWeatherByLocation(
+              lat: state.updatedMarkerPosition!.latitude,
+              lon: state.updatedMarkerPosition!.longitude);
+        }
+      },
+      builder: (context, state) {
+        final cubit = HomeCubit.get(context);
+        final model = cubit.model;
+        return Scaffold(
+          key: cubit.scaffoldKey,
+          drawer: const HomeDrawer(),
+          body: cubit.model == null || state is GetDataLoading
+              ? const LoadingWidget()
+              : Stack(
+                  children: [
+                    IconButton(
+                        onPressed: () =>
+                            cubit.scaffoldKey.currentState!.openDrawer(),
+                        icon: const Icon(
+                          Icons.menu,
+                          size: 32.0,
+                        )),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            CityWidget(cityName: model!.name.toString()),
+                            CountryWidget(
+                                countryName: model.sys!.country.toString()),
+                            const DateWidget(),
                           ],
-                        )
+                        ),
+                        WeatherIcon(
+                            weatherIcon: model.weather![0]!.icon.toString()),
+                        Column(
+                          children: <Widget>[
+                            TempWidget(
+                                temp: model.main!.temp!.toInt().toString()),
+                            WeatherStateWidget(
+                                weatherState:
+                                    model.weather![0]!.description.toString()),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InfoWidget(
+                                  title: 'humidity'.tr(),
+                                  subTitle:
+                                      "${model.main!.humidity.toString()}%"),
+                              InfoWidget(
+                                  title: 'wind'.tr(),
+                                  subTitle:
+                                      model.wind!.speed!.floor().toString() +
+                                          ' ' +
+                                          'km'.tr()),
+                              InfoWidget(
+                                  title: 'real_feel'.tr(),
+                                  subTitle: model.main!.feelsLike!
+                                          .floor()
+                                          .toString() +
+                                      "°C"),
+                            ],
+                          ),
+                        ),
+                        HomeSearch(cubit: cubit),
                       ],
-                    ),
-                  ),
-          );
-        },
-      ),
+                    )
+                  ],
+                ),
+        );
+      },
     ));
   }
 }

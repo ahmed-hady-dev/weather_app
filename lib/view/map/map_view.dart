@@ -1,9 +1,16 @@
+// ignore_for_file: implementation_imports
+
 import 'dart:async';
 
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:weather_app/core/router/router.dart';
+import 'package:weather_app/view/home/controller/home_cubit.dart';
+
 import '../../core/locationHelper/location_helper.dart';
 
 class MapView extends StatefulWidget {
@@ -16,18 +23,24 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   static Position? position;
   final Completer<GoogleMapController> _mapController = Completer();
+  Marker? marker;
+  LatLng? updatedMarkerPosition;
   //===============================================================
   static final CameraPosition _myCurrentLocationCameraPosition = CameraPosition(
       target: LatLng(position!.latitude, position!.longitude),
       bearing: 0.0,
       tilt: 0.0,
       zoom: 17.0);
-
-  Future<void> getMyCurrentLocation() async =>
-      position = await LocationHelper.getCurrentLocation().whenComplete(() {
-        print(position.toString());
-        setState(() {});
-      });
+  Future<void> getMyCurrentLocation() async {
+    position = await LocationHelper.getCurrentLocation().whenComplete(() {
+      setState(() {});
+    });
+    marker = Marker(
+      markerId: const MarkerId('id'),
+      position: LatLng(position!.latitude, position!.longitude),
+    );
+    updatedMarkerPosition = LatLng(position!.latitude, position!.longitude);
+  }
 
   Future<void> _goToMyCurrentLocation() async {
     final GoogleMapController controller = await _mapController.future;
@@ -37,6 +50,13 @@ class _MapViewState extends State<MapView> {
 
   Widget buildMap() {
     return GoogleMap(
+      markers: marker == null ? {} : {marker!},
+      onTap: (argument) {
+        setState(() {
+          marker = Marker(markerId: const MarkerId('id'), position: argument);
+          updatedMarkerPosition = argument;
+        });
+      },
       initialCameraPosition: _myCurrentLocationCameraPosition,
       mapType: MapType.normal,
       myLocationEnabled: true,
@@ -57,24 +77,73 @@ class _MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            position != null
-                ? buildMap()
-                : const Center(
-                    child: CupertinoActivityIndicator(
-                        animating: true, radius: 32.0)),
-          ],
-        ),
-        floatingActionButton: Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 8, 30),
-          child: FloatingActionButton(
-            onPressed: _goToMyCurrentLocation,
-            child: const Icon(Icons.place, color: Colors.white),
-          ),
-        ),
+      child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          final cubit = HomeCubit.get(context);
+          return Scaffold(
+            body: Stack(
+              fit: StackFit.expand,
+              children: [
+                position != null
+                    ? buildMap()
+                    : const Center(
+                        child: CupertinoActivityIndicator(
+                            animating: true, radius: 32.0)),
+                MagicRouter.currentContext!.locale.languageCode == 'en'
+                    ? Positioned(
+                        top: 8.0,
+                        left: 8.0,
+                        child: IconButton(
+                            onPressed: () => MagicRouter.pop(),
+                            icon: const Icon(
+                              Icons.arrow_back_ios_rounded,
+                              color: Colors.black,
+                            )))
+                    : Positioned(
+                        top: 8.0,
+                        right: 8.0,
+                        child: IconButton(
+                            onPressed: () => MagicRouter.pop(),
+                            icon: const Icon(
+                              Icons.arrow_back_ios_rounded,
+                              color: Colors.black,
+                            ))),
+                Positioned(
+                  bottom: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: Container(
+                    height: 60.0,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12.0),
+                          topRight: Radius.circular(12.0),
+                        )),
+                    child: TextButton(
+                      onPressed: () {
+                        cubit.updateMarkerPosition(
+                            updatedMarkerPosition: updatedMarkerPosition!);
+                        MagicRouter.pop();
+                      },
+                      child: Text(
+                        'choose_location'.tr(),
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            floatingActionButton: Container(
+              margin: const EdgeInsets.fromLTRB(0, 0, 8, 30),
+              child: FloatingActionButton(
+                onPressed: _goToMyCurrentLocation,
+                child: const Icon(Icons.place, color: Colors.white),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

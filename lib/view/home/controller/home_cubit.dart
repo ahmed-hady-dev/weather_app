@@ -1,16 +1,16 @@
 // ignore_for_file: implementation_imports
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/constants/constants.dart';
 import 'package:weather_app/core/dioHelper/dio_helper.dart';
 import 'package:weather_app/core/locationHelper/location_helper.dart';
 import 'package:weather_app/core/router/router.dart';
 import 'package:weather_app/view/home/model/weather_model.dart';
-import 'package:easy_localization/src/public_ext.dart';
 
 part 'home_state.dart';
 
@@ -45,15 +45,25 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  //===============================================================
+  updateLang() {
+    emit(UpdateLanguage());
+  }
+  //===============================================================
+
+  updateMarkerPosition({required LatLng updatedMarkerPosition}) async {
+    emit(UpdatedMarker(updatedMarkerPosition: updatedMarkerPosition));
+  }
+
 //===============================================================
-  Future<void> getWeatherByLocation() async {
+  Future<void> getWeatherByLocation(
+      {required double lat, required double lon}) async {
     emit(GetDataLoading());
-    final currentPosition = await getCurrentLocation();
     final response = await DioHelper.getData(url: 'weather', query: {
       'appid': weatherApiKey,
       'units': 'metric',
-      'lat': currentPosition!.latitude,
-      'lon': currentPosition.longitude,
+      'lat': lat,
+      'lon': lon,
       'lang':
           MagicRouter.currentContext!.locale.languageCode == 'en' ? 'en' : 'ar'
     });

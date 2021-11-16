@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:nil/nil.dart';
+import 'view/home/controller/home_cubit.dart';
 import 'core/locationHelper/location_helper.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/theme_cubit.dart';
@@ -36,45 +37,57 @@ void main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key, required this.isDark}) : super(key: key);
-  final bool isDark;
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key, this.isDark}) : super(key: key);
+  final bool? isDark;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ThemeCubit()..changeTheme(themeModeFromCache: isDark),
-      child: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, state) {
-          var themeCubit = ThemeCubit.get(context).isDark;
-          return MaterialApp(
-            title: 'Weather App',
-            debugShowCheckedModeBanner: false,
-            navigatorKey: navigatorKey,
-            onGenerateRoute: onGenerateRoute,
-            themeMode: themeCubit ? ThemeMode.dark : ThemeMode.light,
-            theme: lightTheme(context),
-            darkTheme: darkTheme(context),
-            locale: context.locale,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
-            home: OfflineBuilder(
-              connectivityBuilder: (BuildContext context,
-                  ConnectivityResult connectivity, Widget child) {
-                final bool connected = connectivity == ConnectivityResult.none;
-                if (connected) {
-                  return FallbackView(
-                    image: 'assets/images/error.png',
-                    text: 'internet_error'.tr(),
-                  );
-                }
-                return const HomeView();
-              },
-              child: nil,
-            ),
-          );
-        },
-      ),
-    );
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+              create: (context) =>
+                  ThemeCubit()..changeTheme(themeModeFromCache: widget.isDark)),
+          BlocProvider(
+            create: (context) => HomeCubit()..getCurrentLocation(),
+          ),
+        ],
+        child: BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, state) {
+            var themeCubit = ThemeCubit.get(context).isDark;
+            return MaterialApp(
+              title: 'Weather App',
+              debugShowCheckedModeBanner: false,
+              navigatorKey: navigatorKey,
+              onGenerateRoute: onGenerateRoute,
+              themeMode: themeCubit ? ThemeMode.dark : ThemeMode.light,
+              theme: lightTheme(context),
+              darkTheme: darkTheme(context),
+              locale: context.locale,
+              supportedLocales: context.supportedLocales,
+              localizationsDelegates: context.localizationDelegates,
+              home: OfflineBuilder(
+                connectivityBuilder: (BuildContext context,
+                    ConnectivityResult connectivity, Widget child) {
+                  final bool connected =
+                      connectivity == ConnectivityResult.none;
+                  if (connected) {
+                    return FallbackView(
+                      image: 'assets/images/error.png',
+                      text: 'internet_error'.tr(),
+                    );
+                  }
+                  return const HomeView();
+                },
+                child: nil,
+              ),
+            );
+          },
+        ));
   }
 }

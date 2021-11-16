@@ -2,8 +2,7 @@
 
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_app/core/router/router.dart';
-import 'package:weather_app/view/splash/splash_view.dart';
+import 'package:weather_app/view/home/controller/home_cubit.dart';
 
 class LanguageRow extends StatelessWidget {
   const LanguageRow({Key? key}) : super(key: key);
@@ -24,10 +23,10 @@ class LanguageRow extends StatelessWidget {
               onPressed: () {
                 if (context.locale.languageCode == 'en') {
                   context.setLocale(const Locale('ar', 'EG'));
-                  MagicRouter.navigateAndPopAll(const SplashView());
+                  HomeCubit.get(context).updateLang();
                 } else if (context.locale.languageCode == 'ar') {
                   context.setLocale(const Locale('en', 'US'));
-                  MagicRouter.navigateAndPopAll(const SplashView());
+                  HomeCubit.get(context).updateLang();
                 }
               },
               child: Text(

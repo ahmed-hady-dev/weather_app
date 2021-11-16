@@ -3,7 +3,6 @@
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/core/cacheHelper/cache_helper.dart';
 import 'package:weather_app/core/theme/theme_cubit.dart';
 import 'package:weather_app/view/home/controller/home_cubit.dart';
@@ -25,18 +24,13 @@ class ThemeRow extends StatelessWidget {
             style:
                 Theme.of(context).textTheme.headline6!.copyWith(fontSize: 18.0),
           ),
-          BlocBuilder<HomeCubit, HomeState>(
-            builder: (context, state) {
-              final cubit = HomeCubit.get(context);
-              return CupertinoSwitch(
-                activeColor: Colors.black26,
-                thumbColor: Colors.black,
-                value: CacheHelper.get(key: 'isDark'),
-                onChanged: (value) {
-                  cubit.changeNotificationToggle(value: value);
-                  ThemeCubit.get(context).changeTheme();
-                },
-              );
+          CupertinoSwitch(
+            activeColor: Colors.black26,
+            thumbColor: Colors.black,
+            value: CacheHelper.get(key: 'isDark'),
+            onChanged: (value) {
+              HomeCubit.get(context).changeNotificationToggle(value: value);
+              ThemeCubit.get(context).changeTheme();
             },
           ),
         ],

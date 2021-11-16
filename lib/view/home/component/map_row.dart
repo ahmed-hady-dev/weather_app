@@ -22,6 +22,7 @@ class MapRow extends StatelessWidget {
           ),
           IconButton(
               onPressed: () {
+                MagicRouter.pop();
                 MagicRouter.navigateTo(const MapView());
               },
               icon: const Icon(

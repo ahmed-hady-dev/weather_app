@@ -5,6 +5,14 @@ abstract class HomeState {}
 class HomeInitial extends HomeState {}
 
 class ChangeNotificationToggle extends HomeState {}
+
+class UpdateLanguage extends HomeState {}
+
+class UpdatedMarker extends HomeState {
+  final LatLng? updatedMarkerPosition;
+
+  UpdatedMarker({required this.updatedMarkerPosition});
+}
 //===============================================================
 
 class LocationLoading extends HomeState {}

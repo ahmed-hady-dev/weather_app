@@ -12,5 +12,6 @@
   "lang": "Language",
   "km": "km/hr",
   "field_empty": "This field can not be empty.",
-  "map": "Choose from map"
+  "map": "Choose from map",
+  "choose_location": "Choose location"
 }
