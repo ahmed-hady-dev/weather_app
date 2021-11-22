@@ -27,6 +27,7 @@ class HomeSearch extends StatelessWidget {
         )),
         child: Container(
           width: MediaQuery.of(context).size.width,
+          height: 50.0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(32),
             color: CacheHelper.get(key: 'isDark')

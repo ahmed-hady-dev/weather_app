@@ -38,7 +38,18 @@ class SearchView extends StatelessWidget {
             final cubit = HomeCubit.get(context);
             return Column(
               children: <Widget>[
-                SearchField(cubit: cubit),
+                SearchField(
+                  search: () {
+                    cubit
+                        .getWeatherByCityName(
+                          cityName:
+                              cubit.searchController!.value.text.toString(),
+                        )
+                        .then((value) => cubit.searchController!.clear());
+                  },
+                  formKey: cubit.formKey,
+                  searchController: cubit.searchController!,
+                ),
                 const Spacer(),
                 state is GetDataLoading
                     ? const Loading()

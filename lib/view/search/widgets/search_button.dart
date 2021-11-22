@@ -14,7 +14,8 @@ class SearchButton extends StatelessWidget {
       child: OutlinedButton.icon(
         onPressed: onPressed,
         icon: const Icon(Icons.search_rounded),
-        label: Text('search_short'.tr()),
+        label: Text('search_short'.tr(),
+            style: Theme.of(context).textTheme.bodyText1),
         style: OutlinedButton.styleFrom(
           shape: const StadiumBorder(),
           enableFeedback: true,

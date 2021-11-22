@@ -13,5 +13,13 @@
   "km": "km/hr",
   "field_empty": "This field can not be empty.",
   "map": "Choose from map",
-  "choose_location": "Choose location"
+  "choose_location": "Choose location",
+  "location_permission": "location permission is denied, please make sure to allow permission.",
+  "open_settings": "Open app settings",
+  "allow_permission": "Allow permission",
+  "turn_gps": "Turn on the GPS service and press retry.",
+  "retry": "Retry",
+  "error": "Some error happened, please refresh",
+  "refresh": "Refresh",
+  "turn_gps_button": "Settings"
 }

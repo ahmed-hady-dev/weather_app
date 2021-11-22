@@ -25,9 +25,8 @@ class _DateWidgetState extends State<DateWidget> {
               style: Theme.of(context).textTheme.headline6,
               children: [
                 TextSpan(
-                  text: formattedTime,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                    text: formattedTime,
+                    style: Theme.of(context).textTheme.headline6),
               ],
             ),
           ),

@@ -4,7 +4,7 @@ class CityWidget extends StatelessWidget {
   final String cityName;
   const CityWidget({
     Key? key,
-    this.cityName = 'Mansoura',
+    required this.cityName,
   }) : super(key: key);
 
   @override

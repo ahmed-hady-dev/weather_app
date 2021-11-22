@@ -17,7 +17,7 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
   static HomeCubit get(context) => BlocProvider.of(context);
-//===============================================================
+  //===============================================================
   Position? position;
   WeatherModel? model;
   Map<String, dynamic>? errorMap;
@@ -25,12 +25,20 @@ class HomeCubit extends Cubit<HomeState> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController? searchController = TextEditingController();
   bool notificationToggle = true;
+
+  //===============================================================
+  @override
+  Future<void> close() {
+    searchController!.dispose();
+    return super.close();
+  }
+
   //===============================================================
   changeNotificationToggle({required bool value}) {
     notificationToggle = value;
     emit(ChangeNotificationToggle());
   }
-//===============================================================
+  //===============================================================
 
   Future<Position?> getCurrentLocation() async {
     emit(LocationLoading());
@@ -55,7 +63,7 @@ class HomeCubit extends Cubit<HomeState> {
     emit(UpdatedMarker(updatedMarkerPosition: updatedMarkerPosition));
   }
 
-//===============================================================
+  //===============================================================
   Future<void> getWeatherByLocation(
       {required double lat, required double lon}) async {
     emit(GetDataLoading());

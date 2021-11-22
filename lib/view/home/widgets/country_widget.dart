@@ -4,7 +4,7 @@ class CountryWidget extends StatelessWidget {
   final String countryName;
   const CountryWidget({
     Key? key,
-    this.countryName = 'EGYPT',
+    required this.countryName,
   }) : super(key: key);
 
   @override

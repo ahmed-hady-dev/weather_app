@@ -46,6 +46,11 @@ class _MapViewState extends State<MapView> {
     final GoogleMapController controller = await _mapController.future;
     controller.animateCamera(
         CameraUpdate.newCameraPosition(_myCurrentLocationCameraPosition));
+    setState(() {
+      marker = Marker(
+          markerId: const MarkerId('id'),
+          position: LatLng(position!.latitude, position!.longitude));
+    });
   }
 
   Widget buildMap() {
@@ -75,6 +80,11 @@ class _MapViewState extends State<MapView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: BlocBuilder<HomeCubit, HomeState>(
@@ -88,26 +98,10 @@ class _MapViewState extends State<MapView> {
                     ? buildMap()
                     : const Center(
                         child: CupertinoActivityIndicator(
-                            animating: true, radius: 32.0)),
+                            animating: true, radius: 24.0)),
                 MagicRouter.currentContext!.locale.languageCode == 'en'
-                    ? Positioned(
-                        top: 8.0,
-                        left: 8.0,
-                        child: IconButton(
-                            onPressed: () => MagicRouter.pop(),
-                            icon: const Icon(
-                              Icons.arrow_back_ios_rounded,
-                              color: Colors.black,
-                            )))
-                    : Positioned(
-                        top: 8.0,
-                        right: 8.0,
-                        child: IconButton(
-                            onPressed: () => MagicRouter.pop(),
-                            icon: const Icon(
-                              Icons.arrow_back_ios_rounded,
-                              color: Colors.black,
-                            ))),
+                    ? buildBackButton(left: 8.0)
+                    : buildBackButton(right: 8.0),
                 Positioned(
                   bottom: 0.0,
                   left: 0.0,
@@ -146,5 +140,24 @@ class _MapViewState extends State<MapView> {
         },
       ),
     );
+  }
+
+  Positioned buildBackButton({
+    double? left,
+    double? right,
+  }) {
+    return Positioned(
+        top: 8.0,
+        left: left,
+        right: right,
+        child: IconButton(
+            onPressed: () => MagicRouter.pop(),
+            icon: CircleAvatar(
+              backgroundColor: Colors.grey[400],
+              child: const Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Colors.black,
+              ),
+            )));
   }
 }

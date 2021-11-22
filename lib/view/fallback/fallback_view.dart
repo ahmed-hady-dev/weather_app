@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
 class FallbackView extends StatelessWidget {
-  const FallbackView({Key? key, required this.image, required this.text})
+  const FallbackView(
+      {Key? key,
+      required this.image,
+      required this.text,
+      required this.onPressed,
+      required this.buttonText})
       : super(key: key);
   final String image;
   final String text;
+  final String buttonText;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +33,13 @@ class FallbackView extends StatelessWidget {
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
-        )
+        ),
+        OutlinedButton(
+            onPressed: onPressed,
+            child: Text(
+              buttonText,
+              style: Theme.of(context).textTheme.bodyText1,
+            ))
       ],
     ));
   }

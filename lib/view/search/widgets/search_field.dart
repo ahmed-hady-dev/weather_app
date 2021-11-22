@@ -2,19 +2,25 @@
 
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_app/view/home/controller/home_cubit.dart';
 
 class SearchField extends StatelessWidget {
-  const SearchField({Key? key, required this.cubit}) : super(key: key);
-  final HomeCubit cubit;
+  const SearchField(
+      {Key? key,
+      required this.searchController,
+      required this.formKey,
+      required this.search})
+      : super(key: key);
+  final TextEditingController searchController;
+  final GlobalKey<FormState> formKey;
+  final Function() search;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
       child: Form(
-        key: cubit.formKey,
+        key: formKey,
         child: TextFormField(
-          controller: cubit.searchController,
+          controller: searchController,
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value!.isEmpty) {
@@ -23,25 +29,18 @@ class SearchField extends StatelessWidget {
             return null;
           },
           onFieldSubmitted: (value) {
-            if (cubit.formKey.currentState!.validate()) {
-              cubit
-                  .getWeatherByCityName(
-                    cityName: cubit.searchController!.value.text.toString(),
-                  )
-                  .then((value) => cubit.searchController!.clear());
-            }
+            if (formKey.currentState!.validate()) search;
           },
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.all(16),
             hintText: 'search_weather'.tr(),
             prefixIcon: const Icon(Icons.location_on_rounded),
-            suffixIcon: cubit.searchController!.text.isEmpty
-                ? const SizedBox()
-                : IconButton(
-                    onPressed: () => cubit.searchController!.clear(),
-                    icon: const Icon(
-                      Icons.close_rounded,
-                    ),
-                  ),
+            suffixIcon: IconButton(
+              onPressed: () => searchController.clear(),
+              icon: const Icon(
+                Icons.close_rounded,
+              ),
+            ),
           ),
         ),
       ),
