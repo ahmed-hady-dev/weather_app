@@ -16,7 +16,9 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
+
   static HomeCubit get(context) => BlocProvider.of(context);
+
   //===============================================================
   Position? position;
   WeatherModel? model;
@@ -38,6 +40,7 @@ class HomeCubit extends Cubit<HomeState> {
     notificationToggle = value;
     emit(ChangeNotificationToggle());
   }
+
   //===============================================================
 
   Future<Position?> getCurrentLocation() async {
@@ -57,6 +60,7 @@ class HomeCubit extends Cubit<HomeState> {
   updateLang() {
     emit(UpdateLanguage());
   }
+
   //===============================================================
 
   updateMarkerPosition({required LatLng updatedMarkerPosition}) async {
@@ -79,7 +83,10 @@ class HomeCubit extends Cubit<HomeState> {
       model = WeatherModel.fromJson(response.data);
       emit(GetDataSuccess());
     } on DioError catch (e) {
-      debugPrint(e.error.toString());
+      print(e.toString());
+      if (e.type == DioErrorType.other) {
+        print(e.toString());
+      }
       emit(GetDataFailed());
     } catch (e, s) {
       debugPrint(e.toString());

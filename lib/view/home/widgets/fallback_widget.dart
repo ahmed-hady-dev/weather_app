@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FallbackWidget extends StatelessWidget {
+  const FallbackWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(

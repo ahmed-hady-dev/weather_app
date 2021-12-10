@@ -3,7 +3,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_offline/flutter_offline.dart';
 import 'package:nil/nil.dart';
 import 'package:weather_app/view/splash/splash_view.dart';
 import 'view/home/controller/home_cubit.dart';
@@ -72,24 +71,7 @@ class _MyAppState extends State<MyApp> {
               locale: context.locale,
               supportedLocales: context.supportedLocales,
               localizationsDelegates: context.localizationDelegates,
-              home: OfflineBuilder(
-                connectivityBuilder: (BuildContext context,
-                    ConnectivityResult connectivity, Widget child) {
-                  final bool connected =
-                      connectivity == ConnectivityResult.none;
-                  if (connected) {
-                    return FallbackView(
-                      image: 'assets/images/error.png',
-                      text: 'internet_error'.tr(),
-                      buttonText: 'retry',
-                      onPressed: () =>
-                          MagicRouter.navigateAndPopAll(const SplashView()),
-                    );
-                  }
-                  return const SplashView();
-                },
-                child: nil,
-              ),
+              home: const SplashView(),
             );
           },
         ));
