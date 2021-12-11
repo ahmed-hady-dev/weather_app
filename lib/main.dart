@@ -19,7 +19,6 @@ import 'core/router/router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //===============================================================
-  Bloc.observer = MyBlocObserver();
   DioHelper.init();
   //===============================================================
   await EasyLocalization.ensureInitialized();
@@ -29,12 +28,17 @@ void main() async {
       await CacheHelper.saveData(key: 'isDark', value: false);
   bool? isDark = CacheHelper.get(key: 'isDark');
   //===============================================================
-  runApp(EasyLocalization(
-    child: MyApp(isDark: isDark!),
-    path: 'assets/translation',
-    supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
-    fallbackLocale: const Locale('en', 'US'),
-  ));
+  BlocOverrides.runZoned(
+    () {
+      runApp(EasyLocalization(
+        child: MyApp(isDark: isDark!),
+        path: 'assets/translation',
+        supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
+        fallbackLocale: const Locale('en', 'US'),
+      ));
+    },
+    blocObserver: MyBlocObserver(),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -54,6 +58,7 @@ class _MyAppState extends State<MyApp> {
               create: (context) =>
                   ThemeCubit()..changeTheme(themeModeFromCache: widget.isDark)),
           BlocProvider(
+            lazy: false,
             create: (context) => HomeCubit(),
           ),
         ],

@@ -29,7 +29,7 @@ class ThemeRow extends StatelessWidget {
             thumbColor: Colors.black,
             value: CacheHelper.get(key: 'isDark'),
             onChanged: (value) {
-              HomeCubit.get(context).changeNotificationToggle(value: value);
+              HomeCubit.get(context).changeThemeToggle(value: value);
               ThemeCubit.get(context).changeTheme();
             },
           ),

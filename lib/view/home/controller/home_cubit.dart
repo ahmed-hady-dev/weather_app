@@ -1,5 +1,7 @@
 // ignore_for_file: implementation_imports
 
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/constants/constants.dart';
+import 'package:weather_app/core/connectivity_helper/connectivity_helper.dart';
 import 'package:weather_app/core/dioHelper/dio_helper.dart';
 import 'package:weather_app/core/locationHelper/location_helper.dart';
 import 'package:weather_app/core/router/router.dart';
@@ -26,19 +29,36 @@ class HomeCubit extends Cubit<HomeState> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController? searchController = TextEditingController();
-  bool notificationToggle = true;
+  bool themeToggle = true;
+  late bool isConnected;
+  StreamController<ConnectivityStatus> connectivityStream =
+      ConnectivityHelper().connectionStatusController;
 
   //===============================================================
   @override
   Future<void> close() {
     searchController!.dispose();
+    connectivityStream.close();
     return super.close();
   }
 
   //===============================================================
-  changeNotificationToggle({required bool value}) {
-    notificationToggle = value;
-    emit(ChangeNotificationToggle());
+  changeThemeToggle({required bool value}) {
+    themeToggle = value;
+    emit(ChangeThemeToggleState());
+  }
+
+  //===============================================================
+  Future<void> checkConnectivity() async {
+    connectivityStream.stream.asBroadcastStream().listen((status) {
+      if (status == ConnectivityStatus.offline) {
+        isConnected = false;
+        emit(ConnectivityOfflineState());
+      } else {
+        isConnected = true;
+        emit(ConnectivityOnlineState());
+      }
+    });
   }
 
   //===============================================================

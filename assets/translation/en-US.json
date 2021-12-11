@@ -21,5 +21,6 @@
   "retry": "Retry",
   "error": "Some error happened, please refresh",
   "refresh": "Refresh",
-  "turn_gps_button": "Settings"
+  "turn_gps_button": "Settings",
+  "offline_toast": "you are Offline! please check your connection."
 }

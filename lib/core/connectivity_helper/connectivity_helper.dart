@@ -7,11 +7,14 @@ enum ConnectivityStatus { wifi, cellular, offline }
 class ConnectivityHelper {
   // Create our public controller
   StreamController<ConnectivityStatus> connectionStatusController =
-      StreamController<ConnectivityStatus>();
+      StreamController<ConnectivityStatus>.broadcast();
 
   ConnectivityHelper() {
     // Subscribe to the connectivity Changed Steam
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    Connectivity()
+        .onConnectivityChanged
+        .asBroadcastStream()
+        .listen((ConnectivityResult result) {
       // Use Connectivity() here to gather more info if you need t
 
       connectionStatusController.add(getStatusFromResult(result));

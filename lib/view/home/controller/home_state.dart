@@ -4,7 +4,11 @@ abstract class HomeState {}
 
 class HomeInitial extends HomeState {}
 
-class ChangeNotificationToggle extends HomeState {}
+class ChangeThemeToggleState extends HomeState {}
+
+class ConnectivityOfflineState extends HomeState {}
+
+class ConnectivityOnlineState extends HomeState {}
 
 class UpdateLanguage extends HomeState {}
 

@@ -2,12 +2,14 @@
 
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:weather_app/core/permission_helper/permission_helper.dart';
 import 'package:weather_app/view/fallback/fallback_view.dart';
+import 'package:weather_app/view/home/controller/home_cubit.dart';
 import '../fallback/gps_off_view.dart';
 import '../home/home_view.dart';
 
@@ -40,6 +42,15 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
+    Connectivity().checkConnectivity().then((value) {
+      if (value == ConnectivityResult.none) {
+        HomeCubit.get(context).isConnected = false;
+      } else {
+        HomeCubit.get(context).isConnected = true;
+      }
+    });
+    HomeCubit.get(context).checkConnectivity();
+
     _checkGps();
     Timer(const Duration(milliseconds: 1), () {
       setState(() {
