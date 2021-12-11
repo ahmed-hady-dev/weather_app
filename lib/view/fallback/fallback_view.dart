@@ -5,13 +5,15 @@ class FallbackView extends StatelessWidget {
       {Key? key,
       required this.image,
       required this.text,
-      required this.onPressed,
-      required this.buttonText})
+      this.onPressed,
+      this.buttonText,
+      this.showButton = true})
       : super(key: key);
   final String image;
   final String text;
-  final String buttonText;
+  final String? buttonText;
   final Function()? onPressed;
+  final bool showButton;
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +36,13 @@ class FallbackView extends StatelessWidget {
             ),
           ),
         ),
-        OutlinedButton(
-            onPressed: onPressed,
-            child: Text(
-              buttonText,
-              style: Theme.of(context).textTheme.bodyText1,
-            ))
+        if (showButton)
+          OutlinedButton(
+              onPressed: onPressed,
+              child: Text(
+                buttonText!,
+                style: Theme.of(context).textTheme.bodyText1,
+              )),
       ],
     ));
   }

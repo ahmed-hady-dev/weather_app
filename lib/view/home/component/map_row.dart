@@ -2,7 +2,9 @@
 
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:weather_app/core/router/router.dart';
+import 'package:weather_app/view/home/controller/home_cubit.dart';
 import 'package:weather_app/view/map/map_view.dart';
 
 class MapRow extends StatelessWidget {
@@ -22,8 +24,15 @@ class MapRow extends StatelessWidget {
           ),
           IconButton(
               onPressed: () {
-                MagicRouter.pop();
-                MagicRouter.navigateTo(const MapView());
+                if (HomeCubit.get(context).isConnected) {
+                  MagicRouter.pop();
+                  MagicRouter.navigateTo(const MapView());
+                } else {
+                  Fluttertoast.showToast(
+                    msg: 'offline_toast'.tr(),
+                    backgroundColor: Colors.red,
+                  );
+                }
               },
               icon: const Icon(
                 Icons.place_rounded,

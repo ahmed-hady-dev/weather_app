@@ -9,7 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/core/router/router.dart';
+import 'package:weather_app/view/fallback/fallback_view.dart';
 import 'package:weather_app/view/home/controller/home_cubit.dart';
+import 'package:weather_app/view/splash/splash_view.dart';
 
 import '../../core/locationHelper/location_helper.dart';
 
@@ -25,12 +27,14 @@ class _MapViewState extends State<MapView> {
   final Completer<GoogleMapController> _mapController = Completer();
   Marker? marker;
   LatLng? updatedMarkerPosition;
+
   //===============================================================
   static final CameraPosition _myCurrentLocationCameraPosition = CameraPosition(
       target: LatLng(position!.latitude, position!.longitude),
       bearing: 0.0,
       tilt: 0.0,
       zoom: 17.0);
+
   Future<void> getMyCurrentLocation() async {
     position = await LocationHelper.getCurrentLocation().whenComplete(() {
       setState(() {});
@@ -90,6 +94,13 @@ class _MapViewState extends State<MapView> {
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           final cubit = HomeCubit.get(context);
+          if (!cubit.isConnected) {
+            return FallbackView(
+              image: 'assets/images/error.png',
+              text: 'internet_error'.tr(),
+              showButton: false,
+            );
+          }
           return Scaffold(
             body: Stack(
               fit: StackFit.expand,
