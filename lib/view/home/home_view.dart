@@ -1,22 +1,17 @@
 // ignore_for_file: implementation_imports
 
 import 'package:easy_localization/src/public_ext.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/components/loading_widget.dart';
 import 'package:weather_app/core/router/router.dart';
 import 'package:weather_app/view/fallback/fallback_view.dart';
+import 'package:weather_app/view/home/component/home_landscape_layout.dart';
+import 'package:weather_app/view/home/component/home_portrait_layout.dart';
 import 'package:weather_app/view/home/controller/home_cubit.dart';
-import 'package:weather_app/view/home/widgets/city_widget.dart';
-import 'package:weather_app/view/home/widgets/country_widget.dart';
-import 'package:weather_app/view/home/widgets/date_widget.dart';
-import 'package:weather_app/view/home/widgets/info_widget.dart';
-import 'package:weather_app/view/home/widgets/temp_widget.dart';
-import 'package:weather_app/view/home/widgets/weather_icon.dart';
-import 'package:weather_app/view/home/widgets/weather_state_widget.dart';
+import 'package:weather_app/core/responsive_helper/responsive_layout.dart';
 import 'package:weather_app/view/splash/splash_view.dart';
-import 'component/home_drawer.dart';
-import 'component/home_search.dart';
+import 'widgets/home_drawer.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -29,14 +24,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    HomeCubit.get(context).getCurrentLocation().then((position) {
-      if (HomeCubit.get(context).isConnected) {
-        for (int i = 0; i == 0; i++) {
-          HomeCubit.get(context).getWeatherByLocation(
-              lat: position!.latitude, lon: position.longitude);
-        }
-      }
-    });
+    HomeCubit.get(context).getCurrentLocation();
   }
 
   @override
@@ -75,15 +63,13 @@ class _HomeViewState extends State<HomeView> {
         },
         builder: (context, state) {
           final cubit = HomeCubit.get(context);
-          final model = cubit.model;
           if (!cubit.isConnected && cubit.model == null) {
             return FallbackView(
               image: 'assets/images/error.png',
               text: 'internet_error'.tr(),
-              buttonText: 'retry',
-              onPressed: () {
-                MagicRouter.navigateAndPopAll(const SplashView());
-              },
+              buttonText: 'refresh'.tr(),
+              onPressed: () =>
+                  MagicRouter.navigateAndPopAll(const SplashView()),
             );
           }
           if (cubit.model == null) {
@@ -92,99 +78,13 @@ class _HomeViewState extends State<HomeView> {
           return Scaffold(
             key: cubit.scaffoldKey,
             drawer: const HomeDrawer(),
-            body: Stack(
-              children: [
-                IconButton(
-                    onPressed: () =>
-                        cubit.scaffoldKey.currentState!.openDrawer(),
-                    icon: const Icon(
-                      Icons.menu,
-                      size: 32.0,
-                    )),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        CityWidget(cityName: model!.name.toString()),
-                        CountryWidget(
-                            countryName: model.sys!.country.toString()),
-                        const DateWidget(),
-                      ],
-                    ),
-                    WeatherIcon(
-                        weatherIcon: model.weather![0]!.icon.toString()),
-                    Column(
-                      children: <Widget>[
-                        TempWidget(temp: model.main!.temp!.toInt().toString()),
-                        WeatherStateWidget(
-                            weatherState:
-                                model.weather![0]!.description.toString()),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          InfoWidget(
-                              title: 'humidity'.tr(),
-                              subTitle: "${model.main!.humidity.toString()}%"),
-                          InfoWidget(
-                              title: 'wind'.tr(),
-                              subTitle: model.wind!.speed!.floor().toString() +
-                                  ' ' +
-                                  'km'.tr()),
-                          InfoWidget(
-                              title: 'real_feel'.tr(),
-                              subTitle:
-                                  model.main!.feelsLike!.floor().toString() +
-                                      "°C"),
-                        ],
-                      ),
-                    ),
-                    const HomeSearch(),
-                  ],
-                ),
-                if (!cubit.isConnected)
-                  Positioned(
-                    bottom: 0.0,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 24.0),
-                      color: Colors.red,
-                      width: MediaQuery.of(context).size.width,
-                      child: FittedBox(
-                        child: Text(
-                          'offline_toast'.tr(),
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+            body: ResponsiveLayout(
+              mobilePortrait: HomePortraitLayout(cubit: cubit),
+              mobileLandscape: HomeLandscapeLayout(cubit: cubit),
             ),
           );
         },
       ),
-    );
-  }
-}
-
-class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-          child: CupertinoActivityIndicator(
-        animating: true,
-        radius: 22.0,
-      )),
     );
   }
 }

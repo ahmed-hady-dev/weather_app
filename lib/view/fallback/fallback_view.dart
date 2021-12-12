@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/core/responsive_helper/responsive_layout.dart';
+
+import 'component/fallback_landscape_layout.dart';
+import 'component/fallback_portrait_layout.dart';
 
 class FallbackView extends StatelessWidget {
   const FallbackView(
@@ -18,32 +22,55 @@ class FallbackView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsetsDirectional.all(60),
-          child: Image.asset(image),
+      body: ResponsiveLayout(
+        mobilePortrait: FallbackPortraitLayout(
+          text: text,
+          image: image,
+          onPressed: onPressed,
+          showButton: showButton,
+          buttonText: buttonText,
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-          child: Center(
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-          ),
+        mobileLandscape: FallbackLandscapeLayout(
+          text: text,
+          image: image,
+          onPressed: onPressed,
+          showButton: showButton,
+          buttonText: buttonText,
         ),
-        if (showButton)
-          OutlinedButton(
-              onPressed: onPressed,
-              child: Text(
-                buttonText!,
-                style: Theme.of(context).textTheme.bodyText1,
-              )),
-      ],
-    ));
+      ),
+    );
   }
 }
+// Column(
+//   mainAxisAlignment: MainAxisAlignment.center,
+//   crossAxisAlignment: CrossAxisAlignment.center,
+//   children: [
+//     Container(
+//       margin: const EdgeInsetsDirectional.all(60),
+//       child: Image.asset(image),
+//     ),
+//     Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+//       child: Center(
+//         child: Text(
+//           text,
+//           textAlign: TextAlign.center,
+//           style: Theme
+//               .of(context)
+//               .textTheme
+//               .headline6,
+//         ),
+//       ),
+//     ),
+//     if (showButton)
+//       OutlinedButton(
+//           onPressed: onPressed,
+//           child: Text(
+//             buttonText!,
+//             style: Theme
+//                 .of(context)
+//                 .textTheme
+//                 .bodyText1,
+//           )),
+//   ],
+// )

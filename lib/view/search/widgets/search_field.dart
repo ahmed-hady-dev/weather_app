@@ -13,6 +13,7 @@ class SearchField extends StatelessWidget {
   final TextEditingController searchController;
   final GlobalKey<FormState> formKey;
   final Function() search;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,15 +23,14 @@ class SearchField extends StatelessWidget {
         child: TextFormField(
           controller: searchController,
           keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.go,
           validator: (value) {
             if (value!.isEmpty) {
               return 'field_empty'.tr();
             }
             return null;
           },
-          onFieldSubmitted: (value) {
-            if (formKey.currentState!.validate()) search;
-          },
+          onEditingComplete: search,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(16),
             hintText: 'search_weather'.tr(),

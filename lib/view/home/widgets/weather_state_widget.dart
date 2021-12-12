@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class WeatherStateWidget extends StatelessWidget {
   final String weatherState;
+
   const WeatherStateWidget({
     Key? key,
     this.weatherState = 'Sunny',
@@ -10,7 +11,7 @@ class WeatherStateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.all(8.0),
+      padding: const EdgeInsetsDirectional.only(top: 8.0),
       child: Text(
         weatherState.toUpperCase(),
         softWrap: true,

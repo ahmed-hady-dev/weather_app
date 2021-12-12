@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'map_row.dart';
-import 'theme_row.dart';
+import '../component/map_row.dart';
+import '../component/theme_row.dart';
 
-import 'language_row.dart';
+import '../component/language_row.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({

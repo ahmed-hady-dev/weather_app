@@ -50,7 +50,6 @@ class _SplashViewState extends State<SplashView> {
       }
     });
     HomeCubit.get(context).checkConnectivity();
-
     _checkGps();
     Timer(const Duration(milliseconds: 1), () {
       setState(() {
@@ -58,20 +57,22 @@ class _SplashViewState extends State<SplashView> {
       });
     });
     Timer(const Duration(milliseconds: 2000), () {
-      MagicRouter.navigateAndPopAll(startWidget ??
-          FallbackView(
-              buttonText: 'allow_permission'.tr(),
-              onPressed: () async {
-                if (await Permission.location.status ==
-                    PermissionStatus.granted) {
-                  MagicRouter.navigateAndPopAll(const SplashView());
-                } else {
-                  await Permission.location.request();
-                  await openAppSettings();
-                }
-              },
-              image: 'assets/images/access_denied.png',
-              text: 'location_permission'.tr()));
+      MagicRouter.navigateAndPopAll(
+        startWidget ??
+            FallbackView(
+                buttonText: 'allow_permission'.tr(),
+                onPressed: () async {
+                  if (await Permission.location.status ==
+                      PermissionStatus.granted) {
+                    MagicRouter.navigateAndPopAll(const SplashView());
+                  } else {
+                    await Permission.location.request();
+                    await openAppSettings();
+                  }
+                },
+                image: 'assets/images/access_denied.png',
+                text: 'location_permission'.tr()),
+      );
     });
   }
 

@@ -11,12 +11,17 @@ class WeatherIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.width * 0.6,
-      width: MediaQuery.of(context).size.width,
-      child: FadeInImage.memoryNetwork(
-          placeholder: kTransparentImage,
-          image: 'https://openweathermap.org/img/wn/$weatherIcon@4x.png'),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: AspectRatio(
+        aspectRatio: MediaQuery.of(context).orientation == Orientation.landscape
+            ? 1.5
+            : 1.2,
+        child: FadeInImage.memoryNetwork(
+            fit: BoxFit.fitWidth,
+            placeholder: kTransparentImage,
+            image: 'https://openweathermap.org/img/wn/$weatherIcon@4x.png'),
+      ),
     );
   }
 }

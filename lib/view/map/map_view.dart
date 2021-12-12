@@ -11,7 +11,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/core/router/router.dart';
 import 'package:weather_app/view/fallback/fallback_view.dart';
 import 'package:weather_app/view/home/controller/home_cubit.dart';
-import 'package:weather_app/view/splash/splash_view.dart';
 
 import '../../core/locationHelper/location_helper.dart';
 

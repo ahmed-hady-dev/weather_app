@@ -1,15 +1,10 @@
-// ignore_for_file: unused_import
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nil/nil.dart';
 import 'package:weather_app/view/splash/splash_view.dart';
 import 'view/home/controller/home_cubit.dart';
-import 'core/locationHelper/location_helper.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/theme_cubit.dart';
-import 'view/fallback/fallback_view.dart';
 
 import 'core/blocObserver/bloc_observer.dart';
 import 'core/cacheHelper/cache_helper.dart';

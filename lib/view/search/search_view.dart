@@ -23,6 +23,7 @@ class _SearchViewState extends State<SearchView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
             final cubit = HomeCubit.get(context);
@@ -44,14 +45,7 @@ class _SearchViewState extends State<SearchView> {
             return Column(
               children: <Widget>[
                 SearchField(
-                  search: () {
-                    cubit
-                        .getWeatherByCityName(
-                          cityName:
-                              cubit.searchController!.value.text.toString(),
-                        )
-                        .then((value) => cubit.searchController!.clear());
-                  },
+                  search: () => searchByCity(cubit),
                   formKey: cubit.formKey,
                   searchController: cubit.searchController!,
                 ),
@@ -59,22 +53,7 @@ class _SearchViewState extends State<SearchView> {
                 state is GetDataLoading
                     ? const Loading()
                     : SearchButton(
-                        onPressed: () {
-                          if (!cubit.isConnected) {
-                            Fluttertoast.showToast(
-                              msg: 'offline_toast'.tr(),
-                              backgroundColor: Colors.red,
-                            );
-                          } else if (cubit.formKey.currentState!.validate()) {
-                            cubit
-                                .getWeatherByCityName(
-                                  cityName: cubit.searchController!.value.text
-                                      .toString(),
-                                )
-                                .then(
-                                    (value) => cubit.searchController!.clear());
-                          }
-                        },
+                        onPressed: () => searchByCity(cubit),
                       ),
               ],
             );
@@ -82,5 +61,21 @@ class _SearchViewState extends State<SearchView> {
         ),
       ),
     );
+  }
+}
+
+searchByCity(HomeCubit cubit) {
+  if (!cubit.isConnected) {
+    Fluttertoast.showToast(
+      msg: 'offline_toast'.tr(),
+      backgroundColor: Colors.red,
+    );
+  } else if (cubit.formKey.currentState!.validate()) {
+    FocusScope.of(MagicRouter.currentContext!).requestFocus(FocusNode());
+    cubit
+        .getWeatherByCityName(
+          cityName: cubit.searchController!.value.text.toString(),
+        )
+        .then((value) => cubit.searchController!.clear());
   }
 }

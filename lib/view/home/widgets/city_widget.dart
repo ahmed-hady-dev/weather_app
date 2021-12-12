@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class CityWidget extends StatelessWidget {
   final String cityName;
+
   const CityWidget({
     Key? key,
     required this.cityName,
