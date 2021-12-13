@@ -9,10 +9,7 @@ class DateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateTime now = DateTime.now();
-    String formattedDay = DateFormat.EEEE().format(now);
-    String formattedTime = DateFormat.jm().format(now);
-
+    String formattedDay = DateFormat.EEEE().format(DateTime.now());
     if (context.locale.languageCode == 'ar') {
       switch (formattedDay.toLowerCase()) {
         case 'saturday':
@@ -40,8 +37,9 @@ class DateWidget extends StatelessWidget {
       }
     }
     return StreamBuilder(
-      stream: Stream.periodic(const Duration(seconds: 10)),
+      stream: Stream.periodic(const Duration(seconds: 1)),
       builder: (context, snapshot) {
+        String formattedTime = DateFormat.jm().format(DateTime.now());
         return RichText(
           text: TextSpan(
             text: '${formattedDay.toUpperCase()}   ',

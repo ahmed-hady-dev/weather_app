@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class TempWidget extends StatelessWidget {
   final String temp;
+
   const TempWidget({
     Key? key,
     this.temp = '18',
@@ -14,10 +15,8 @@ class TempWidget extends StatelessWidget {
       softWrap: true,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: Theme.of(context)
-          .textTheme
-          .headline6!
-          .copyWith(letterSpacing: 1.5, fontSize: 52.0),
+      style: Theme.of(context).textTheme.headline6!.copyWith(
+          letterSpacing: 1.5, fontSize: 52.0, fontWeight: FontWeight.w700),
     );
   }
 }

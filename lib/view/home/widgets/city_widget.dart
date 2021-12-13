@@ -17,8 +17,7 @@ class CityWidget extends StatelessWidget {
         softWrap: true,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style:
-            Theme.of(context).textTheme.headline6!.copyWith(letterSpacing: 1.5),
+        style: Theme.of(context).textTheme.headline6,
       ),
     );
   }

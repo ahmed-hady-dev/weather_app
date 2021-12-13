@@ -83,7 +83,7 @@ class HomePortraitLayout extends StatelessWidget {
             ],
           ),
         ),
-        if (!cubit.isConnected) const OfflineBanner(),
+        const OfflineBanner(),
       ],
     );
   }

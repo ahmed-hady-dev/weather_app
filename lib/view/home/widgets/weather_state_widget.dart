@@ -17,7 +17,10 @@ class WeatherStateWidget extends StatelessWidget {
         softWrap: true,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.headline6,
+        style: Theme.of(context)
+            .textTheme
+            .headline6!
+            .copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }
